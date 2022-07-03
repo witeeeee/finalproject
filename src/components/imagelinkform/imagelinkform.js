@@ -5,7 +5,7 @@ const ImageLinkForm = ({onInputChange, onButtonSubmit}) => {
     return (
         <div>
             <p className = 'f3'>
-                This will detect faces in a picture. Give it a try. 
+                This will display a linked image below. Give it a try!
             </p>
             <div className = "outerdiv"> 
                 <div className = "pa4 br3 shadow-5 bb">
