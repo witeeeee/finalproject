@@ -71,7 +71,14 @@ class App extends React.Component {
       input: '',
       imageUrl: '',
       route: 'signin',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
   }
 
@@ -81,6 +88,16 @@ class App extends React.Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input})
+    fetch('http://localhost:3001/image', {
+      method: 'put',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify ({
+        id: this.state.user.id
+      })
+    }).then(response => response.json())
+    .then(count => {
+      this.setState(Object.assign(this.state.user, {entries: count}))
+    })
   }
 
   onRouteChange = (toGo) => {
@@ -91,6 +108,19 @@ class App extends React.Component {
       this.setState({isSignedIn: true})
     }
     this.setState({route: toGo});
+  }
+
+  loadUser = (data) => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        password: data.password,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+      }
+    })
   }
 
   render() {  
@@ -108,14 +138,14 @@ class App extends React.Component {
           ?  
           <div>
             <Logo />
-            <Rank />
+            <Rank name = {this.state.user.name} entries = {this.state.user.entries}/>
             <ImageLinkForm onInputChange = {this.onInputChange} onButtonSubmit = {this.onButtonSubmit}/>
             <FaceRecognition imageUrl = {this.state.imageUrl}/>
           </div>
           : (
             this.state.route === 'signin' 
-            ? <Signin onRouteChange = {this.onRouteChange}/>
-            : <Register onRouteChange={this.onRouteChange}/>
+            ? <Signin loadUser = {this.loadUser} onRouteChange = {this.onRouteChange}/>
+            : <Register loadUser = {this.loadUser} onRouteChange={this.onRouteChange}/>
           )
          }
       </div>
