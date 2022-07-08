@@ -87,17 +87,22 @@ class App extends React.Component {
   }
 
   onButtonSubmit = () => {
-    this.setState({imageUrl: this.state.input})
-    fetch('http://localhost:3001/image', {
-      method: 'put',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify ({
-        id: this.state.user.id
+    if(this.state.input === '')
+      alert("Enter a url dingus");
+    else {
+      this.setState({imageUrl: this.state.input})
+      fetch('http://localhost:3001/image', {
+        method: 'put',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify ({
+          email: this.state.user.email
+        })
       })
-    }).then(response => response.json())
-    .then(count => {
-      this.setState(Object.assign(this.state.user, {entries: count}))
-    })
+      .then(resp => resp.json())
+      .then(count => {
+        this.setState(Object.assign(this.state.user, {entries: count.entries}))
+      })
+    }
   }
 
   onRouteChange = (toGo) => {
@@ -115,10 +120,9 @@ class App extends React.Component {
       user: {
         id: data.id,
         name: data.name,
-        password: data.password,
         email: data.email,
         entries: data.entries,
-        joined: data.joined
+        joined: data.joinedat
       }
     })
   }
