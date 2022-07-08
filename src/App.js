@@ -63,23 +63,25 @@ const particleOptions = {
     detectRetina: true,
   }
 
+const initialState = {
+  input: '',
+  imageUrl: '',
+  route: 'signin',
+  isSignedIn: false,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ''
+  }
+}
+
 class App extends React.Component {
 
   constructor() {
     super();
-    this.state = {
-      input: '',
-      imageUrl: '',
-      route: 'signin',
-      isSignedIn: false,
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: ''
-      }
-    }
+    this.state = initialState;
   }
 
   onInputChange = (event) => {
@@ -102,12 +104,12 @@ class App extends React.Component {
       .then(count => {
         this.setState(Object.assign(this.state.user, {entries: count.entries}))
       })
+      .catch(console.log)
     }
   }
-
   onRouteChange = (toGo) => {
     if(toGo === 'signin') {
-      this.setState({isSignedIn: false})
+      this.setState(initialState)
     } 
     else if (toGo === 'home')  {
       this.setState({isSignedIn: true})
